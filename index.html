@@ -69,7 +69,7 @@
         <div class="section-title">🌍 Travel History</div>
         <div class="grid">
             <div class="input-group"><label>Have you travelled internationally before? *</label>
-                <select name="intl_travel" id="intl_travel" onchange="toggleTravelHistory()">
+                <select name="intl_travel" id="intl_travel" onchange="toggleTravelHistory()" required>
                     <option value="No">No</option>
                     <option value="Yes">Yes</option>
                 </select>
@@ -85,9 +85,12 @@
             <div class="input-group"><label>Spouse Name</label><input type="text" name="spouse_name"></div>
             <div class="input-group full-width"><label>Children Details (Ages/Names)</label><input type="text" name="children_details"></div>
             <div class="input-group"><label>Any relatives abroad? *</label>
-                <select name="relatives"><option value="No">No</option><option value="Yes">Yes</option></select>
+                <select name="relatives" id="relatives" onchange="toggleRelatives(this.value)">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
             </div>
-            <div class="input-group"><label>Relative Details</label><input type="text" name="relative_info"></div>
+            <div class="input-group" id="relative_details"><label>Relative Details</label><input type="text" name="relative_info"></div>
         </div>
         <div class="section-title">💼 Employment / Financial Details</div>
         <div class="grid">
@@ -152,33 +155,98 @@
     </div>
 </div>
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwRS74xWfnYK-5tPEUosxFkRl9rDReHfyIVSiZwoUli-888EAXVW6OquQMA2tNpu7C0qA/exec'; 
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec'; 
     const form = document.getElementById('visaForm');
     const btn = document.getElementById('submitBtn');
-    function toggleStudySection() { const purpose = document.getElementById('purpose').value; document.getElementById('study_permit_section').style.display = purpose === 'Study' ? 'block' : 'none'; }
-    function toggleTravelHistory() { const travelStatus = document.getElementById('intl_travel').value; document.getElementById('countries_container').style.display = travelStatus === 'Yes' ? 'block' : 'none'; }
+    
+    function toggleStudySection() { 
+        const purpose = document.getElementById('purpose').value; 
+        document.getElementById('study_permit_section').style.display = purpose === 'Study' ? 'block' : 'none'; 
+    }
+    function toggleTravelHistory() { 
+        const travelStatus = document.getElementById('intl_travel').value; 
+        document.getElementById('countries_container').style.display = travelStatus === 'Yes' ? 'block' : 'none'; 
+    }
+    function toggleRelatives(val) {
+        const relDetails = document.getElementById('relative_details');
+        if (relDetails) {
+            relDetails.style.display = val === 'Yes' ? 'block' : 'none';
+        }
+    }
     function toggleRefusalDetails() {
         const refusalStatus = document.getElementById('any_refusal').value;
         const container = document.getElementById('refusal_details_container');
         const countryInput = document.getElementById('refused_country');
         const reasonInput = document.getElementById('refused_reason');
-        if (refusalStatus === 'Yes') { container.style.display = 'block'; countryInput.required = true; reasonInput.required = true; } 
-        else { container.style.display = 'none'; countryInput.required = false; reasonInput.required = false; countryInput.value = ''; reasonInput.value = ''; }
+        if (refusalStatus === 'Yes') { 
+            container.style.display = 'block'; 
+            countryInput.disabled = false;
+            reasonInput.disabled = false;
+            countryInput.required = true; 
+            reasonInput.required = true; 
+        } 
+        else { 
+            container.style.display = 'none'; 
+            countryInput.disabled = true;
+            reasonInput.disabled = true;
+            countryInput.required = false; 
+            reasonInput.required = false; 
+            countryInput.value = ''; 
+            reasonInput.value = ''; 
+        }
     }
     function toggleCriminalDetails() {
         const criminalStatus = document.getElementById('criminal').value;
         const container = document.getElementById('criminal_details_container');
         const detailsInput = document.getElementById('criminal_details');
-        if (criminalStatus === 'Yes') { container.style.display = 'block'; detailsInput.required = true; } 
-        else { container.style.display = 'none'; detailsInput.required = false; }
+        if (criminalStatus === 'Yes') { 
+            container.style.display = 'block'; 
+            detailsInput.disabled = false;
+            detailsInput.required = true; 
+        } 
+        else { 
+            container.style.display = 'none'; 
+            detailsInput.disabled = true;
+            detailsInput.required = false; 
+        }
     }
+    
     form.addEventListener('submit', e => {
-        e.preventDefault(); btn.disabled = true; btn.innerHTML = "Processing...";
-        const formData = new FormData(form); const params = new URLSearchParams(formData); params.set('form_type', 'Other');
+        e.preventDefault(); 
+        
+        const countryInput = document.getElementById('refused_country');
+        const reasonInput = document.getElementById('refused_reason');
+        const detailsInput = document.getElementById('criminal_details');
+        
+        if (countryInput) countryInput.disabled = false;
+        if (reasonInput) reasonInput.disabled = false;
+        if (detailsInput) detailsInput.disabled = false;
+        
+        btn.disabled = true; 
+        btn.innerHTML = "Processing...";
+        const formData = new FormData(form); 
+        const params = new URLSearchParams(formData); 
+        params.set('form_type', 'Other');
+        
         fetch(scriptURL + "?" + params.toString(), { method: 'GET', mode: 'no-cors' })
-        .then(() => { document.getElementById('thankYouModal').style.display = 'block'; form.reset(); toggleRefusalDetails(); toggleCriminalDetails(); btn.disabled = false; btn.innerHTML = "SUBMIT APPLICATION"; })
-        .catch(error => { console.error('Error!', error.message); alert("Submission failed."); btn.disabled = false; });
+        .then(() => { 
+            document.getElementById('thankYouModal').style.display = 'block'; 
+            form.reset(); 
+            toggleRefusalDetails(); 
+            toggleCriminalDetails(); 
+            btn.disabled = false; 
+            btn.innerHTML = "SUBMIT APPLICATION"; 
+        })
+        .catch(error => { 
+            console.error('Error!', error.message); 
+            alert("Submission failed."); 
+            btn.disabled = false; 
+        });
     });
+    
+    toggleRefusalDetails();
+    toggleCriminalDetails();
+    toggleRelatives('No');
 </script>
 </body>
 </html>
