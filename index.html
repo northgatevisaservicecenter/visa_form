@@ -26,6 +26,16 @@
         /* Hidden Sections */
         #study_permit_section, #countries_container, #refusal_details_container, #criminal_details_container { display: none; }
 
+        /* Conditional Section Styling for separation */
+        .conditional-fields {
+            background: #f9fbfd;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #1a73e8;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
         .declaration-box { grid-column: 1 / -1; margin-top: 30px; padding: 20px; background: #fff9e6; border-radius: 8px; font-size: 14px; display: flex; align-items: flex-start; gap: 12px; border: 1px solid #ffeeba; text-align: left; width: 100%; box-sizing: border-box; }
         .declaration-box input[type="checkbox"] { width: 18px; height: 18px; margin: 0; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
         .declaration-box label { cursor: pointer; font-weight: 500; line-height: 1.4; margin: 0; }
@@ -157,24 +167,24 @@
                 </select>
             </div>
 
-            <!-- Dynamic Visa Refusal Fields -->
-            <div id="refusal_details_container" class="full-width" style="display:none;">
-                <div class="grid" style="margin-top: 0;">
+            <div id="refusal_details_container" class="full-width conditional-fields">
+                <div class="grid" style="gap: 15px;">
                     <div class="input-group">
-                        <label>Which Country? *</label>
+                        <label>Which Country? (Refusal) *</label>
                         <input type="text" name="refused_country" id="refused_country" placeholder="e.g. Canada, UK, USA">
                     </div>
                     <div class="input-group">
                         <label>Reason for Refusal *</label>
-                        <input type="text" name="refused_reason" id="refused_reason" placeholder="e.g. Lack of funds, Purpose of visit not clear">
+                        <input type="text" name="refused_reason" id="refused_reason">
                     </div>
                 </div>
             </div>
 
-            <!-- Dynamic Criminal Details Field -->
-            <div class="input-group full-width" id="criminal_details_container">
-                <label>Please provide details / reason *</label>
-                <textarea name="criminal_details" id="criminal_details" rows="3" placeholder="Provide brief explanation about your record..."></textarea>
+            <div id="criminal_details_container" class="full-width conditional-fields">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Please provide Criminal Record Details / Reason *</label>
+                    <textarea name="criminal_details" id="criminal_details" rows="3" placeholder="Provide brief explanation about your record..."></textarea>
+                </div>
             </div>
 
             <div class="input-group full-width"><label>Medical Conditions (if any)</label><input type="text" name="medical_info"></div>
@@ -262,14 +272,12 @@
         const formData = new FormData(form);
         const params = new URLSearchParams(formData);
         
-        // FIXED ROUTING PARAMETER: Force state parameter injection internally
         params.set('form_type', 'Other');
 
         fetch(scriptURL + "?" + params.toString(), { method: 'GET', mode: 'no-cors' })
         .then(() => {
             document.getElementById('thankYouModal').style.display = 'block';
             form.reset();
-            // Reset fields after form reset to keep hidden states consistent
             toggleRefusalDetails();
             toggleCriminalDetails();
             btn.disabled = false;
