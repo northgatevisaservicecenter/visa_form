@@ -19,7 +19,7 @@
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .full-width { grid-column: 1 / -1; }
         
-        /* Hidden Containers initially */
+        /* Hidden Containers */
         #countries_container, #refusal_container, #spouse_field, #children_field { display: none; }
 
         .declaration-box { grid-column: 1 / -1; margin-top: 30px; padding: 20px; background: #fff9e6; border-radius: 8px; font-size: 14px; display: flex; align-items: flex-start; gap: 15px; border: 1px solid #ffeeba; width: 100%; box-sizing: border-box; }
@@ -28,8 +28,7 @@
         .submit-btn:hover { background-color: #0d1a44; }
         .submit-btn:disabled { background-color: #cccccc; }
         
-        /* Secondary Action Button style for Modal */
-        .modal-btn-secondary { width: 100%; padding: 15px; background-color: #f0f2f5; color: #333; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s ease; text-decoration: none; display: inline-block; box-sizing: border-box; }
+        .modal-btn-secondary { width: 100%; padding: 15px; background-color: #f0f2f5; color: #333; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s ease; text-decoration: text-decoration; display: inline-block; box-sizing: border-box; }
         .modal-btn-secondary:hover { background-color: #e2e8e6; }
 
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
@@ -45,25 +44,9 @@
     </div>
 
     <form id="masterForm">
-        <!-- Secure classification parameter for tracking -->
         <input type="hidden" name="form_type" value="Other">
 
-        <div class="section-title">🌍 Destination Details</div>
-        <div class="grid">
-            <div class="input-group"><label>Target Country *</label><input type="text" name="target_country" required></div>
-            <div class="input-group">
-                <label>Visa Category *</label>
-                <select name="visa_category" required>
-                    <option value="">Select Category</option>
-                    <option value="Tourist/Visit">Tourist / Visit</option>
-                    <option value="Business">Business</option>
-                    <option value="Student">Student</option>
-                    <option value="Work">Work Permit</option>
-                </select>
-            </div>
-            <div class="input-group"><label>Expected Travel Date</label><input type="date" name="travel_date"></div>
-        </div>
-
+        <!-- 1. Applicant Details (Ab yeh sabse shuru me hai) -->
         <div class="section-title">👤 Applicant Details</div>
         <div class="grid">
             <div class="input-group"><label>Full Name *</label><input type="text" name="full_name" required></div>
@@ -86,6 +69,7 @@
             </div>
         </div>
 
+        <!-- 2. Family Information -->
         <div class="section-title">👨‍👩‍👧 Family Information</div>
         <div class="grid">
             <div class="input-group"><label>Number of Dependents</label><input type="number" name="dependents" value="0"></div>
@@ -93,6 +77,24 @@
             <div class="input-group full-width" id="children_field"><label>Children Details(if Any)</label><textarea name="children_details" rows="2"></textarea></div>
         </div>
 
+        <!-- 3. Destination Details (Ab yeh Travel History se pehle hai!) -->
+        <div class="section-title">🌍 Destination Details</div>
+        <div class="grid">
+            <div class="input-group"><label>Target Country *</label><input type="text" name="target_country" required></div>
+            <div class="input-group">
+                <label>Visa Category *</label>
+                <select name="visa_category" required>
+                    <option value="">Select Category</option>
+                    <option value="Tourist/Visit">Tourist / Visit</option>
+                    <option value="Business">Business</option>
+                    <option value="Student">Student</option>
+                    <option value="Work">Work Permit</option>
+                </select>
+            </div>
+            <div class="input-group"><label>Expected Travel Date</label><input type="date" name="travel_date"></div>
+        </div>
+
+        <!-- 4. Travel History -->
         <div class="section-title">🌍 Travel History</div>
         <div class="grid">
             <div class="input-group full-width">
@@ -119,6 +121,7 @@
             </div>
         </div>
 
+        <!-- 5. Employment / Financial Details -->
         <div class="section-title">💼 Employment / Financial Details</div>
         <div class="grid">
             <div class="input-group"><label>Occupation *</label><input type="text" name="occupation" required></div>
@@ -142,7 +145,6 @@
     <div class="modal-box">
         <h2 style="color:#1a2a6c;">Submitted!</h2>
         <p>Your details have been saved successfully. We will contact you soon.</p>
-        
         <button class="submit-btn" style="margin-top: 15px; padding: 14px;" onclick="window.location.reload()">Done / New Form</button>
         <a href="https://northgatevisaservices.com/" class="modal-btn-secondary">Go to Home</a>
     </div>
@@ -165,7 +167,6 @@
         if(status === 'No') document.getElementById('refusal_details').value = '';
     }
 
-    // Dynamic Marital Field Toggling Logic
     function toggleMaritalFields(status) {
         if (status === 'Single' || status === '') {
             document.getElementById('spouse_field').style.display = 'none';
