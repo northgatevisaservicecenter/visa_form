@@ -180,17 +180,12 @@
         const reasonInput = document.getElementById('refused_reason');
         if (refusalStatus === 'Yes') { 
             container.style.display = 'block'; 
-            countryInput.disabled = false;
-            reasonInput.disabled = false;
             countryInput.required = true; 
             reasonInput.required = true; 
         } 
         else { 
             container.style.display = 'none'; 
-            countryInput.disabled = true;
-            reasonInput.disabled = true;
             countryInput.required = false; 
-            reasonInput.required = false; 
             countryInput.value = ''; 
             reasonInput.value = ''; 
         }
@@ -201,26 +196,17 @@
         const detailsInput = document.getElementById('criminal_details');
         if (criminalStatus === 'Yes') { 
             container.style.display = 'block'; 
-            detailsInput.disabled = false;
             detailsInput.required = true; 
         } 
         else { 
             container.style.display = 'none'; 
-            detailsInput.disabled = true;
             detailsInput.required = false; 
+            detailsInput.value = '';
         }
     }
     
     form.addEventListener('submit', e => {
         e.preventDefault(); 
-        
-        const countryInput = document.getElementById('refused_country');
-        const reasonInput = document.getElementById('refused_reason');
-        const detailsInput = document.getElementById('criminal_details');
-        
-        if (countryInput) countryInput.disabled = false;
-        if (reasonInput) reasonInput.disabled = false;
-        if (detailsInput) detailsInput.disabled = false;
         
         btn.disabled = true; 
         btn.innerHTML = "Processing...";
